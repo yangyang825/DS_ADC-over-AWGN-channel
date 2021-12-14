@@ -1,66 +1,65 @@
 #include "const.h"
 #include "complex.h"
-double estimate(double* realSignal);
-//extern MSE, SSE;
+double estimate(double *realSignal);
+// extern MSE, SSE;
 
 void ADC(Complex(*received_signal), double(*estimated_signal))
 {
 
-	for (int i = 0; i < OFDM_N; i++)
-	{
-		estimated_signal[i] = estimate(&received_signal[i].real);
-		//printf("i=%d, estimated_signal = %lf   received_signal=%lf \n", i, estimated_signal[i], received_signal[i].real);
-	}
+  for (int i = 0; i < OFDM_N; i++)
+  {
+    estimated_signal[i] = estimate(&received_signal[i].real);
+    // printf("i=%d, estimated_signal = %lf   received_signal=%lf \n", i, estimated_signal[i], received_signal[i].real);
+  }
 }
 
-double estimate(double *realSignal) 
+double estimate(double *realSignal)
 {
-	double estimated_signal=0;
-	
-	int adcN = 35; 	//È¡Ñù´ÎÊý.......ºóÆÚÐ´½øconst.hÀï£¬ÓÃÆµÂÊ1/fs±íÊ¾
+  double estimated_signal = 0;
 
-	double delta;
-	double sumOfDelta=0;
-	int bitStream[35];
-	//int *bitStream;
-	//bitStream = (int*)malloc(sizeof(int) * adcN);
-	for (int j = 0; j < adcN; j++)
-	{
-		//³õÊ¼»¯
-		bitStream[j] = 0;
-	}
+  int adcN = 35; //È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.......ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½const.hï¿½ï£¬ï¿½ï¿½Æµï¿½ï¿½1/fsï¿½ï¿½Ê¾
 
-	double DACoutput = Vref;	//+ or -Vref
+  double delta;
+  double sumOfDelta = 0;
+  int bitStream[35];
+  // int *bitStream;
+  // bitStream = (int*)malloc(sizeof(int) * adcN);
+  for (int j = 0; j < adcN; j++)
+  {
+    //ï¿½ï¿½Ê¼ï¿½ï¿½
+    bitStream[j] = 0;
+  }
 
-	//¶ÔÓÚÃ¿Ò»¸öÐÅºÅ¶¼È¡adcN´ÎÆ½¾ùÖµ
-	for (int j = 0; j < adcN; j++)
-	{
-		//³õÊ¼»¯
-		bitStream[j] = 0;
-		delta = *realSignal - DACoutput;
-		sumOfDelta += delta;
-		//printf("delta = %f\n", delta);
-		//printf("sumOfDelta = %lf\n", sumOfDelta);
+  double DACoutput = Vref; //+ or -Vref
 
-		if (sumOfDelta >= 0)
-		{
-			bitStream[j] = 1;
-			DACoutput = Vref;
-		}
-		else
-		{
-			bitStream[j] = 0;
-			DACoutput = -Vref;
-		}
-		//printf("%d\n", bitStream[j]);
-		//printf("DACoutput_signal = %lf\n", DACoutput);
-		estimated_signal += DACoutput;
-		//free(bitStream);
-		*bitStream = NULL;
-	}
-	//ÇóÆ½¾ù 
-	estimated_signal /= adcN;
-	//Ëæ×ÅÑ­»·´ÎÊýÔö¼Ó,ÄÜÊä³öÒ»¸öÊÕÁ²ÓÚtransmitted_signal[0]µÄÖµ
-	return estimated_signal;
+  //ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ÅºÅ¶ï¿½È¡adcNï¿½ï¿½Æ½ï¿½ï¿½Öµ
+  for (int j = 0; j < adcN; j++)
+  {
+    //ï¿½ï¿½Ê¼ï¿½ï¿½
+    bitStream[j] = 0;
+    delta = *realSignal - DACoutput;
+    sumOfDelta += delta;
+    // printf("delta = %f\n", delta);
+    // printf("sumOfDelta = %lf\n", sumOfDelta);
+
+    if (sumOfDelta >= 0)
+    {
+      bitStream[j] = 1;
+      DACoutput = Vref;
+    }
+    else
+    {
+      bitStream[j] = 0;
+      DACoutput = -Vref;
+    }
+    // printf("%d\n", bitStream[j]);
+    // printf("DACoutput_signal = %lf\n", DACoutput);
+    estimated_signal += DACoutput;
+    // free(bitStream);
+    *bitStream = NULL;
+  }
+  //ï¿½ï¿½Æ½ï¿½ï¿½
+  estimated_signal /= adcN;
+  //ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½transmitted_signal[0]ï¿½ï¿½Öµ
+  return estimated_signal;
 }
-
