@@ -1,3 +1,0 @@
-﻿  ADC.c
-C:\Users\杨杨\Desktop\仿真ZF-TDC\DELTA-SIGMA-ADC\ADC.c(59,20): warning C4047: “=”:“int”与“void *”的间接级别不同
-  ADC_TEST1.vcxproj -> C:\Users\杨杨\Desktop\仿真ZF-TDC\DELTA-SIGMA-ADC\ADC_TEST1\Debug\ADC_TEST1.exe
