@@ -6,7 +6,7 @@ void removeGI(Complex(*signal), Complex(*output_signal))
   int j;
   for (j = 0; j < OFDM_N; j++)
   {
-    output_signal[j].real = signal[j - GI].real;
-    output_signal[j].image = signal[j - GI].image;
+    output_signal[j].real = signal[j + GI].real;
+    output_signal[j].image = signal[j + GI].image;
   }
 }
